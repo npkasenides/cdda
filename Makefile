@@ -176,9 +176,25 @@ ifndef RELEASE
   RELEASE = 0
 endif
 
-# Enable astyle by default
-ifndef ASTYLE
-  ASTYLE = 1
+ifeq ($(RELEASE), 1)
+  ifndef USE_XDG_DIR
+    USE_XDG_DIR = 1
+  endif
+  ifndef LTO
+    LTO = 1
+  endif
+endif
+
+ifndef TILES
+  TILES = 1
+endif
+
+ifndef SOUND
+  SOUND = 1
+endif
+
+ifndef NOOPT
+  NOOPT = 1
 endif
 
 # We don't want to have both 'check' and 'tests' as targets, because that will
@@ -436,7 +452,7 @@ ifeq ($(RELEASE), 1)
   CXXFLAGS += $(LTOFLAGS)
 
   # OTHERS += -mmmx -m3dnow -msse -msse2 -msse3 -mfpmath=sse -mtune=native
-  # OTHERS += -march=native # Uncomment this to build an optimized binary for your machine only
+  OTHERS += -march=native # Uncomment this to build an optimized binary for your machine only
 
   # Strip symbols, generates smaller executable.
   OTHERS += $(RELEASE_FLAGS)
