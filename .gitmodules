@@ -1,0 +1,3 @@
+[submodule "otopack"]
+	path = data/sound/Otopack
+	url = git@github.com:npkasenides/otopack.git
