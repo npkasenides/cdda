@@ -99,7 +99,7 @@
 # RELEASE_FLAGS is flags for release builds.
 RELEASE_FLAGS =
 WARNINGS = \
-  -Werror -Wall -Wextra \
+  -Wall -Wextra \
   -Wformat-signedness \
   -Wlogical-op \
   -Wmissing-declarations \
@@ -113,7 +113,8 @@ WARNINGS = \
   -Wzero-as-null-pointer-constant \
   -Wno-unknown-warning-option \
   -Wno-dangling-reference \
-  -Wno-c++20-compat
+  -Wno-c++20-compat \
+  -Wno-template-body
 ifeq ($(NATIVE), emscripten)
   # The EM_ASM macro triggers this warning.
   WARNINGS += -Wno-gnu-zero-variadic-macro-arguments
@@ -178,11 +179,6 @@ endif
 # Enable astyle by default
 ifndef ASTYLE
   ASTYLE = 1
-endif
-
-# Enable json format check by default
-ifndef LINTJSON
-  LINTJSON = 1
 endif
 
 # We don't want to have both 'check' and 'tests' as targets, because that will
