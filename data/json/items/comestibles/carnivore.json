@@ -577,6 +577,7 @@
     "copy-from": "meat_scrap",
     "type": "COMESTIBLE",
     "name": { "str": "cooked scrap of meat", "str_pl": "cooked scraps of meat" },
+    "description": "A cooked scrap of meat.",
     "parasites": 0,
     "fun": 0,
     "flags": [ "NUTRIENT_OVERRIDE" ],
