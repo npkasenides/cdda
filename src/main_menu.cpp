@@ -298,9 +298,6 @@ void main_menu::print_menu( const catacurses::window &w_open, int iSel, const po
 
     if( iSel == getopt( main_menu_opts::NEWCHAR ) ) {
         center_print( w_open, window_height - 2, c_yellow, vNewGameHints[sel2] );
-    } else {
-        center_print( w_open, window_height - 2, c_red,
-                      _( "Bugs?  Suggestions?  Use links in MOTD to report them." ) );
     }
 
     center_print( w_open, window_height - 1, c_light_cyan, string_format( _( "Tip of the day: %s" ),
