@@ -193,6 +193,7 @@ cataclysm.a
 # clang tooling
 compile_commands.json
 .clangd
+.cache
 
 # IDA database
 Cataclysm.i64
