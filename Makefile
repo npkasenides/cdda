@@ -193,10 +193,6 @@ ifndef SOUND
   SOUND = 1
 endif
 
-ifndef NOOPT
-  NOOPT = 1
-endif
-
 # We don't want to have both 'check' and 'tests' as targets, because that will
 # result in make trying to build the tests twice in parallel, wasting time
 # (The tests target will be launched parallel to the check target, and both
