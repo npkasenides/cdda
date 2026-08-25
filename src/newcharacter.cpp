@@ -95,9 +95,6 @@ static const trait_id trait_WEAKSCENT( "WEAKSCENT" );
 static const trait_id trait_XS( "XS" );
 static const trait_id trait_XXXL( "XXXL" );
 
-// Wether or not to use Outfit (M) at character creation
-static bool outfit = true;
-
 // Responsive screen behavior for small terminal sizes
 static bool isWide = false;
 
@@ -423,9 +420,8 @@ void avatar::randomize( const bool random_scenario, bool play_now )
     const int max_trait_points = get_option<int>( "MAX_TRAIT_POINTS" );
     // Reset everything to the defaults to have a clean state.
     *this = avatar();
-    bool gender_selection = one_in( 2 );
-    male = gender_selection;
-    outfit = gender_selection;
+
+    male = ( rng( 1, 100 ) > 50 );
     if( !MAP_SHARING::isSharing() ) {
         play_now ? pick_name() : pick_name( true );
     } else {
@@ -611,7 +607,7 @@ void avatar::add_profession_items()
         return;
     }
 
-    std::list<item> prof_items = prof->items( outfit, get_mutations() );
+    std::list<item> prof_items = prof->items( male, get_mutations() );
 
     for( item &it : prof_items ) {
         if( it.has_flag( STATIC( flag_id( "WET" ) ) ) ) {
@@ -1025,19 +1021,11 @@ static const char *g_switch_msg( const avatar &u )
 {
     return  u.male ?
             //~ Gender switch message. 1s - change key name, 2s - profession name.
-            _( "Identity: <color_magenta>%2$s</color> (<color_light_cyan>male</color>) (press <color_light_green>%1$s</color> to switch)" )
-            :
+            _( "Press <color_light_green>%1$s</color> to switch "
+               "to <color_magenta>%2$s</color> (<color_pink>female</color>)." ) :
             //~ Gender switch message. 1s - change key name, 2s - profession name.
-            _( "Identity: <color_magenta>%2$s</color> (<color_pink>female</color>) (press <color_light_green>%1$s</color> to switch)" );
-}
-
-static const char *dress_switch_msg()
-{
-    return  outfit ?
-            //~ Outfit switch message. 1s - change key name.
-            _( "Outfit: <color_light_cyan>male</color> (press <color_light_green>%1$s</color> to change)" ) :
-            //~ Outfit switch message. 1s - change key name.
-            _( "Outfit: <color_pink>female</color> (press <color_light_green>%1$s</color> to change)" );
+            _( "Press <color_light_green>%1$s</color> to switch "
+               "to <color_magenta>%2$s</color> (<color_light_cyan>male</color>)." );
 }
 
 void set_points( tab_manager &tabs, avatar &u, pool_type &pool )
@@ -1988,8 +1976,7 @@ static std::string assemble_profession_details( const avatar &u, const input_con
     assembled += string_format( _( "Origin: %s" ), mod_src ) + "\n";
 
     assembled += string_format( g_switch_msg( u ), ctxt.get_desc( "CHANGE_GENDER" ),
-                                sorted_profs[cur_id]->gender_appropriate_name( u.male ) ) + "\n";
-    assembled += string_format( dress_switch_msg(), ctxt.get_desc( "CHANGE_OUTFIT" ) ) + "\n";
+                                sorted_profs[cur_id]->gender_appropriate_name( !u.male ) ) + "\n";
 
     if( sorted_profs[cur_id]->get_requirement().has_value() ) {
         assembled += "\n" + colorize( _( "Profession requirements:" ), COL_HEADER ) + "\n";
@@ -2064,7 +2051,7 @@ static std::string assemble_profession_details( const avatar &u, const input_con
     }
 
     // Profession items
-    const auto prof_items = sorted_profs[cur_id]->items( outfit, u.get_mutations() );
+    const auto prof_items = sorted_profs[cur_id]->items( u.male, u.get_mutations() );
     assembled += "\n" + colorize( _( "Profession items:" ), COL_HEADER ) + "\n";
     if( prof_items.empty() ) {
         assembled += pgettext( "set_profession_item", "None" ) + std::string( "\n" );
@@ -2254,7 +2241,6 @@ void set_profession( tab_manager &tabs, avatar &u, pool_type pool )
     ctxt.register_navigate_ui_list();
     ctxt.register_action( "CONFIRM" );
     ctxt.register_action( "CHANGE_GENDER" );
-    ctxt.register_action( "CHANGE_OUTFIT" );
     ctxt.register_action( "SORT" );
     ctxt.register_action( "HELP_KEYBINDINGS" );
     ctxt.register_action( "FILTER" );
@@ -2412,9 +2398,6 @@ void set_profession( tab_manager &tabs, avatar &u, pool_type pool )
             // Add traits for the new profession (and perhaps scenario, if, for example,
             // both the scenario and old profession require the same trait)
             u.add_traits();
-        } else if( action == "CHANGE_OUTFIT" ) {
-            outfit = !outfit;
-            recalc_profs = true;
         } else if( action == "CHANGE_GENDER" ) {
             u.male = !u.male;
             profession_sorter.male = u.male;
@@ -2454,7 +2437,6 @@ static std::string assemble_hobby_details( const avatar &u, const input_context 
 
     assembled += string_format( g_switch_msg( u ), ctxt.get_desc( "CHANGE_GENDER" ),
                                 sorted_hobbies[cur_id]->gender_appropriate_name( !u.male ) ) + "\n";
-    assembled += string_format( dress_switch_msg(), ctxt.get_desc( "CHANGE_OUTFIT" ) ) + "\n";
 
     assembled += "\n" + colorize( _( "Background story:" ), COL_HEADER ) + "\n";
     assembled += colorize( sorted_hobbies[cur_id]->description( u.male ), c_green ) + "\n";
@@ -2568,7 +2550,6 @@ void set_hobbies( tab_manager &tabs, avatar &u, pool_type pool )
     ctxt.register_navigate_ui_list();
     ctxt.register_action( "CONFIRM" );
     ctxt.register_action( "CHANGE_GENDER" );
-    ctxt.register_action( "CHANGE_OUTFIT" );
     ctxt.register_action( "SORT" );
     ctxt.register_action( "HELP_KEYBINDINGS" );
     ctxt.register_action( "FILTER" );
@@ -2739,9 +2720,6 @@ void set_hobbies( tab_manager &tabs, avatar &u, pool_type pool )
                 u.toggle_trait_deps( trait );
             }
 
-        } else if( action == "CHANGE_OUTFIT" ) {
-            outfit = !outfit;
-            recalc_hobbies = true;
         } else if( action == "CHANGE_GENDER" ) {
             u.male = !u.male;
             profession_sorter.male = u.male;
@@ -3116,8 +3094,6 @@ static std::string assemble_scenario_details( const avatar &u, const input_conte
 
     assembled += string_format( g_switch_msg( u ), ctxt.get_desc( "CHANGE_GENDER" ),
                                 current_scenario->gender_appropriate_name( !u.male ) ) + "\n";
-    assembled += string_format( dress_switch_msg(), ctxt.get_desc( "CHANGE_OUTFIT" ) ) + "\n";
-
     assembled += string_format(
                      _( "Press <color_light_green>%1$s</color> to change cataclysm start date, <color_light_green>%2$s</color> to change game start date, <color_light_green>%3$s</color> to reset calendar." ),
                      ctxt.get_desc( "CHANGE_START_OF_CATACLYSM" ), ctxt.get_desc( "CHANGE_START_OF_GAME" ),
@@ -3244,7 +3220,6 @@ void set_scenario( tab_manager &tabs, avatar &u, pool_type pool )
     ctxt.register_action( "SORT" );
     ctxt.register_action( "HELP_KEYBINDINGS" );
     ctxt.register_action( "CHANGE_GENDER" );
-    ctxt.register_action( "CHANGE_OUTFIT" );
     ctxt.register_action( "FILTER" );
     ctxt.register_action( "RESET_FILTER" );
     ctxt.register_action( "CHANGE_START_OF_CATACLYSM" );
@@ -3392,9 +3367,6 @@ void set_scenario( tab_manager &tabs, avatar &u, pool_type pool )
             }
             reset_scenario( u, sorted_scens[cur_id] );
             details_recalc = true;
-        } else if( action == "CHANGE_OUTFIT" ) {
-            outfit = !outfit;
-            recalc_scens = true;
         } else if( action == "CHANGE_GENDER" ) {
             u.male = !u.male;
             recalc_scens = true;
@@ -3451,7 +3423,6 @@ namespace char_creation
 enum description_selector {
     NAME,
     GENDER,
-    OUTFIT,
     HEIGHT,
     AGE,
     BLOOD,
@@ -3499,26 +3470,6 @@ static void draw_gender( ui_adaptor &ui, const catacurses::window &w_gender,
     mvwprintz( w_gender, female_pos, ( you.male ? c_light_gray : c_pink ),
                _( "Female" ) );
     wnoutrefresh( w_gender );
-}
-
-static void draw_outfit( ui_adaptor &ui, const catacurses::window &w_outfit, const bool highlight )
-{
-    const point male_pos( 1 + utf8_width( _( "Outfit:" ) ), 0 );
-    const point female_pos = male_pos + point( 2 + utf8_width( _( "Male" ) ), 0 );
-
-    werase( w_outfit );
-    mvwprintz( w_outfit, point_zero, highlight ? COL_SELECT : c_light_gray, _( "Outfit:" ) );
-    if( highlight && outfit ) {
-        ui.set_cursor( w_outfit, male_pos );
-    }
-    mvwprintz( w_outfit, male_pos, ( outfit ? c_light_cyan : c_light_gray ),
-               _( "Male" ) );
-    if( highlight && !outfit ) {
-        ui.set_cursor( w_outfit, female_pos );
-    }
-    mvwprintz( w_outfit, female_pos, ( outfit ? c_light_gray : c_pink ),
-               _( "Female" ) );
-    wnoutrefresh( w_outfit );
 }
 
 static void draw_height( ui_adaptor &ui, const catacurses::window &w_height,
@@ -3661,7 +3612,6 @@ void set_description( tab_manager &tabs, avatar &you, const bool allow_reroll,
     catacurses::window w;
     catacurses::window w_name;
     catacurses::window w_gender;
-    catacurses::window w_outfit;
     catacurses::window w_location;
     catacurses::window w_vehicle;
     catacurses::window w_stats;
@@ -3692,8 +3642,7 @@ void set_description( tab_manager &tabs, avatar &you, const bool allow_reroll,
         if( isWide ) {
             w = catacurses::newwin( TERMY, TERMX, point_zero );
             w_name = catacurses::newwin( 2, ncol2 + 2, point( 2, 6 ) );
-            w_gender = catacurses::newwin( 1, ncol2 + 2, point( 2, 7 ) );
-            w_outfit = catacurses::newwin( 1, ncol2 + 1, point( 2, 8 ) );
+            w_gender = catacurses::newwin( 1, ncol2 + 2, point( 2, 8 ) );
             w_location = catacurses::newwin( 1, ncol3, point( beginx3, 6 ) );
             w_vehicle = catacurses::newwin( 1, ncol3, point( beginx3, 7 ) );
             w_addictions = catacurses::newwin( 1, ncol3, point( beginx3, 8 ) );
@@ -3713,9 +3662,8 @@ void set_description( tab_manager &tabs, avatar &you, const bool allow_reroll,
             ui.position_from_window( w );
         } else {
             w = catacurses::newwin( TERMY, TERMX, point_zero );
-            w_name = catacurses::newwin( 1, ncol_small, point( 2, 5 ) );
-            w_gender = catacurses::newwin( 1, ncol_small, point( 2, 6 ) );
-            w_outfit = catacurses::newwin( 1, ncol_small, point( 2, 7 ) );
+            w_name = catacurses::newwin( 1, ncol_small, point( 2, 6 ) );
+            w_gender = catacurses::newwin( 1, ncol_small, point( 2, 7 ) );
             w_height = catacurses::newwin( 1, ncol_small, point( 2, 8 ) );
             w_age = catacurses::newwin( 1, ncol_small, point( begin_sncol, 6 ) );
             w_blood = catacurses::newwin( 1, ncol_small, point( begin_sncol, 7 ) );
@@ -3749,7 +3697,6 @@ void set_description( tab_manager &tabs, avatar &you, const bool allow_reroll,
         ctxt.register_action( "REROLL_CHARACTER_WITH_SCENARIO" );
     }
     ctxt.register_action( "CHANGE_GENDER" );
-    ctxt.register_action( "CHANGE_OUTFIT" );
     ctxt.register_action( "HELP_KEYBINDINGS" );
     ctxt.register_action( "CHANGE_START_OF_CATACLYSM" );
     ctxt.register_action( "CHANGE_START_OF_GAME" );
@@ -3992,7 +3939,6 @@ void set_description( tab_manager &tabs, avatar &you, const bool allow_reroll,
         char_creation::draw_name( ui, w_name, you, current_selector == char_creation::NAME,
                                   no_name_entered );
         char_creation::draw_gender( ui, w_gender, you, current_selector == char_creation::GENDER );
-        char_creation::draw_outfit( ui, w_outfit, current_selector == char_creation::OUTFIT );
         char_creation::draw_age( ui, w_age, you, current_selector == char_creation::AGE );
         char_creation::draw_height( ui, w_height, you, current_selector == char_creation::HEIGHT );
         char_creation::draw_blood( ui, w_blood, you, current_selector == char_creation::BLOOD );
@@ -4154,9 +4100,6 @@ void set_description( tab_manager &tabs, avatar &you, const bool allow_reroll,
                     current_selector = char_creation::GENDER;
                     break;
                 case char_creation::GENDER:
-                    current_selector = char_creation::OUTFIT;
-                    break;
-                case char_creation::OUTFIT:
                     current_selector = char_creation::HEIGHT;
                     break;
                 case char_creation::HEIGHT:
@@ -4187,9 +4130,6 @@ void set_description( tab_manager &tabs, avatar &you, const bool allow_reroll,
                     current_selector = char_creation::HEIGHT;
                     break;
                 case char_creation::HEIGHT:
-                    current_selector = char_creation::OUTFIT;
-                    break;
-                case char_creation::OUTFIT:
                     current_selector = char_creation::GENDER;
                     break;
                 case char_creation::GENDER:
@@ -4225,9 +4165,6 @@ void set_description( tab_manager &tabs, avatar &you, const bool allow_reroll,
                 case char_creation::GENDER:
                     you.male = !you.male;
                     break;
-                case char_creation::OUTFIT:
-                    outfit = !outfit;
-                    break;
                 default:
                     break;
             }
@@ -4260,9 +4197,6 @@ void set_description( tab_manager &tabs, avatar &you, const bool allow_reroll,
                 case char_creation::GENDER:
                     you.male = !you.male;
                     break;
-                case char_creation::OUTFIT:
-                    outfit = !outfit;
-                    break;
                 default:
                     break;
             }
@@ -4284,9 +4218,7 @@ void set_description( tab_manager &tabs, avatar &you, const bool allow_reroll,
                 no_name_entered = you.name.empty();
             }
         } else if( action == "RANDOMIZE_CHAR_DESCRIPTION" ) {
-            bool gender_selection = one_in( 2 );
-            you.male = gender_selection;
-            outfit = gender_selection;
+            you.male = one_in( 2 );
             if( !MAP_SHARING::isSharing() ) { // Don't allow random names when sharing maps. We don't need to check at the top as you won't be able to edit the name
                 you.pick_name();
                 no_name_entered = you.name.empty();
@@ -4295,8 +4227,6 @@ void set_description( tab_manager &tabs, avatar &you, const bool allow_reroll,
             you.randomize_height();
             you.randomize_blood();
             you.randomize_heartrate();
-        } else if( action == "CHANGE_OUTFIT" ) {
-            outfit = !outfit;
         } else if( action == "CHANGE_GENDER" ) {
             you.male = !you.male;
         } else if( action == "CHANGE_START_OF_CATACLYSM" ) {
@@ -4405,18 +4335,6 @@ void set_description( tab_manager &tabs, avatar &you, const bool allow_reroll,
                         break;
                     }
                     you.male = static_cast<bool>( gselect.ret );
-                    break;
-                }
-                case char_creation::OUTFIT: {
-                    uilist gselect;
-                    gselect.text = _( "Select outfit" );
-                    gselect.addentry( 0, true, '1', _( "Female" ) );
-                    gselect.addentry( 1, true, '2', _( "Male" ) );
-                    gselect.query();
-                    if( gselect.ret < 0 ) {
-                        break;
-                    }
-                    outfit = static_cast<bool>( gselect.ret );
                     break;
                 }
                 case char_creation::LOCATION: {
