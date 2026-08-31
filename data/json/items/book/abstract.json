@@ -4,6 +4,7 @@
     "type": "BOOK",
     "name": { "str": "Generic Nonfiction Book" },
     "description": "template for a manuscript purporting to be factual",
+    "price_postapoc": 50,
     "intelligence": 5,
     "symbol": "?",
     "looks_like": "story_book",
@@ -15,6 +16,7 @@
     "type": "BOOK",
     "name": { "str": "Generic Fiction Book" },
     "description": "template for a work of fiction",
+    "price_postapoc": 50,
     "intelligence": 5,
     "symbol": "?",
     "looks_like": "story_book",
@@ -32,7 +34,6 @@
     "volume": "1100 ml",
     "longest_side": "23 cm",
     "price": 1999,
-    "price_postapoc": 1500,
     "material": [ "paper", "cardboard" ],
     "copy-from": "book_fict_tpl",
     "melee_damage": { "bash": 2 }
@@ -46,7 +47,6 @@
     "volume": "662 ml",
     "longest_side": "18 cm",
     "price": 799,
-    "price_postapoc": 1500,
     "material": [ "paper" ],
     "flags": [  ],
     "copy-from": "book_fict_tpl",
@@ -60,7 +60,6 @@
     "weight": "1 kg",
     "volume": "1100 ml",
     "price": 1450,
-    "price_postapoc": 2900,
     "material": [ "paper", "cardboard" ],
     "chapters": 18,
     "copy-from": "book_nonf_tpl",
@@ -74,7 +73,6 @@
     "weight": "460 g",
     "volume": "500 ml",
     "price": 990,
-    "price_postapoc": 2700,
     "material": [ "paper" ],
     "chapters": 18,
     "copy-from": "book_nonf_tpl",
@@ -87,7 +85,7 @@
     "description": "This is a template for pulp books.  Which really all ought to be paperbacks, right?",
     "looks_like": "novel_pulp",
     "copy-from": "book_fict_soft_tpl",
-    "relative": { "intelligence": -1, "chapters": -2, "fun": 1, "price": -200, "price_postapoc": -1000 }
+    "relative": { "intelligence": -1, "chapters": -2, "fun": 1, "price": -200 }
   },
   {
     "abstract": "book_fict_soft_scifi_tpl",
@@ -112,7 +110,7 @@
     "description": "This is a template for books about homemaking, style, home decor, and home economics.",
     "weight": "1100 g",
     "copy-from": "book_nonf_hard_tpl",
-    "relative": { "intelligence": -1, "price_postapoc": -1600, "chapters": 2 }
+    "relative": { "intelligence": -1, "chapters": 2 }
   },
   {
     "abstract": "book_nonf_hard_cook_tpl",
@@ -154,7 +152,7 @@
     "fun": 1,
     "time": "36 m",
     "copy-from": "book_nonf_hard_tpl",
-    "relative": { "price": 500, "price_postapoc": -2500, "intelligence": 3 }
+    "relative": { "price": 500, "intelligence": 3 }
   },
   {
     "abstract": "book_nonf_soft_phil_tpl",
@@ -164,7 +162,7 @@
     "fun": 1,
     "time": "36 m",
     "copy-from": "book_nonf_soft_tpl",
-    "relative": { "price": 400, "price_postapoc": -2600, "intelligence": 3 }
+    "relative": { "price": 400, "intelligence": 3 }
   },
   {
     "abstract": "book_pulp_newage_tpl",
@@ -173,7 +171,7 @@
     "description": "This is a template for pulp new-age books.  They're theoretically nonfiction.",
     "copy-from": "book_fict_soft_pulp_tpl",
     "weight": "250 g",
-    "relative": { "chapters": -6, "price": 2500, "price_postapoc": -100 }
+    "relative": { "chapters": -6, "price": 2500 }
   },
   {
     "abstract": "book_nonf_hard_sports_tpl",
@@ -215,7 +213,7 @@
     "weight": "371 g",
     "volume": "700 ml",
     "price": 750,
-    "price_postapoc": 2900,
+    "price_postapoc": 500,
     "material": [ "paper" ],
     "symbol": "?",
     "looks_like": "story_book",
@@ -236,7 +234,7 @@
     "volume": "400 ml",
     "copy-from": "book_fict_soft_tpl",
     "time": "11 m",
-    "relative": { "price": -351, "price_postapoc": -800, "chapters": -8, "intelligence": -1 }
+    "relative": { "price": -351, "chapters": -8, "intelligence": -1 }
   },
   {
     "abstract": "paperback_romance_lnl",
@@ -244,7 +242,7 @@
     "name": { "str": "Lorn and Loan Romance Novel" },
     "description": "Lorn and Loan Press marketed romance paperbacks to a variety of alt demographics, especially those with a penchant for eyeliner.  The books are billed as \"provocative,\" but words like \"malingering\" and \"turgid\" also come to mind.",
     "copy-from": "book_fict_soft_tpl",
-    "relative": { "price_postapoc": -400, "intelligence": 1, "fun": -1 }
+    "relative": { "intelligence": 1, "fun": -1 }
   },
   {
     "abstract": "paperback_romance_vanilla",
@@ -252,7 +250,7 @@
     "name": { "str": "Vanilla Romance Novel" },
     "description": "Vanilla Media is a mainstream publisher providing romantic literature to everyday readers of taste.  These stories contain explicit details only in the odd chapters, and invariably end with a conventionally uplifting moral.",
     "copy-from": "book_fict_soft_tpl",
-    "relative": { "price_postapoc": -100, "intelligence": -1 }
+    "relative": { "intelligence": -1 }
   },
   {
     "abstract": "paperback_western_em",
@@ -260,7 +258,7 @@
     "name": { "str": "The Everyman Library" },
     "description": "The Everyman Library is an imprint of Vanilla Media that publishes stories about private eyes, cowboys, quarterbacks, and mobsters.",
     "copy-from": "book_fict_soft_tpl",
-    "relative": { "price_postapoc": -100, "intelligence": -1 }
+    "relative": { "intelligence": -1 }
   },
   {
     "abstract": "book_fict_soft_ya_vanilla",
@@ -268,7 +266,7 @@
     "name": { "str": "Tween Topics" },
     "description": "Tween Topics is an imprint of Vanilla Media that publishes stories that appeal to the youth of today.  Or, failing that, the parents of said youth.",
     "copy-from": "book_fict_soft_tpl",
-    "relative": { "price_postapoc": -400, "intelligence": -1, "fun": -1 }
+    "relative": { "intelligence": -1, "fun": -1 }
   },
   {
     "abstract": "book_fict_soft_ya_quiddity",
@@ -276,7 +274,7 @@
     "name": { "str": "Quiddity Books" },
     "description": "Quiddity publishes books for young adults.  They offer stories about self-discovery, personal identity, and contemporary trends.",
     "copy-from": "book_fict_soft_tpl",
-    "relative": { "price_postapoc": -400, "chapters": 7 }
+    "relative": { "chapters": 7 }
   },
   {
     "abstract": "book_fict_hard_ya_quiddity",
@@ -287,7 +285,7 @@
     "volume": "1014 ml",
     "longest_side": "22 cm",
     "copy-from": "book_fict_hard_tpl",
-    "relative": { "price_postapoc": -400, "chapters": 10 }
+    "relative": { "chapters": 10 }
   },
   {
     "abstract": "book_fict_soft_satire_tpl",
@@ -307,7 +305,7 @@
     "weight": "60 g",
     "volume": "250 ml",
     "price": 400,
-    "price_postapoc": 100,
+    "price_postapoc": 50,
     "material": [ "paper" ],
     "symbol": "?",
     "color": "pink",
@@ -345,6 +343,7 @@
     "name": { "str": "Generic Anthology Book" },
     "description": "template for a collection of stories",
     "intelligence": 5,
+    "price_postapoc": 50,
     "symbol": "?",
     "looks_like": "story_book",
     "color": "yellow",

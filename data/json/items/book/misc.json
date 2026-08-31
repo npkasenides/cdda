@@ -213,7 +213,6 @@
     "description": "The stirring tale of a race against time, in search of a lost city located in the heart of the African continent.",
     "copy-from": "book_fict_soft_tpl",
     "price": 850,
-    "price_postapoc": 50,
     "time": "20 m",
     "fun": 3
   },
@@ -601,7 +600,6 @@
     "description": "A thrilling narrative of survival in a prisoner of war camp during the Second World War, filled with riveting subplots about rat farming and dysentery.",
     "copy-from": "book_fict_soft_tpl",
     "weight": "686 g",
-    "price_postapoc": 50,
     "intelligence": 7,
     "time": "20 m",
     "chapters": 28,

@@ -200,7 +200,6 @@
     "volume": "1 L",
     "longest_side": "21 cm",
     "price": 3400,
-    "price_postapoc": 50,
     "copy-from": "book_nonf_soft_phil_tpl"
   }
 ]
