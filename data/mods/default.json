@@ -4,6 +4,14 @@
     "id": "dev:default",
     "name": "default",
     "description": "contains all the mods recommended by the developers",
-    "dependencies": [ "dda", "no_npc_food", "personal_portal_storms", "no_fungal_growth", "translate_dialogue" ]
+    "dependencies": [
+      "dda",
+      "package_bionic_professions",
+      "cbm_slots",
+      "no_npc_food",
+      "personal_portal_storms",
+      "no_fungal_growth",
+      "translate_dialogue"
+    ]
   }
 ]
