@@ -1,0 +1,14 @@
+[
+  {
+    "type": "MOD_INFO",
+    "id": "no_fungal_monsters",
+    "name": "No Fungal Monsters",
+    "description": "Removes fungal monsters, which also makes fungal terrain spread impossible.",
+    "category": "monster_exclude",
+    "dependencies": [ "dda" ]
+  },
+  {
+    "type": "MONSTER_BLACKLIST",
+    "species": [ "FUNGUS" ]
+  }
+]
