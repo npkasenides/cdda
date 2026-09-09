@@ -4412,7 +4412,6 @@
       { "group": "accessory_sportsgear", "prob": 5 },
       { "item": "ring_wedding", "prob": 1 },
       { "item": "american_flag", "prob": 1 },
-      { "item": "pride_flag", "prob": 1 },
       { "item": "national_flag", "prob": 1 },
       { "item": "state_flag", "prob": 1 },
       { "item": "tool_belt", "prob": 2 },

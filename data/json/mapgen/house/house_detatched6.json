@@ -1,8 +1,8 @@
 [
   {
-    "id": "flags_pride_and_other",
+    "id": "flags",
     "type": "item_group",
-    "items": [ [ "pride_flag", 70 ], [ "american_flag", 20 ], [ "state_flag", 10 ] ]
+    "items": [ [ "american_flag", 20 ], [ "state_flag", 10 ] ]
   },
   {
     "type": "mapgen",
@@ -71,7 +71,7 @@
         { "chance": 50, "item": "stoner", "x": 4, "y": 11 },
         { "chance": 50, "item": "stoner", "x": 5, "y": [ 10, 11 ] },
         { "chance": 50, "item": "stoner", "x": 4, "y": 5 },
-        { "chance": 50, "item": "flags_pride_and_other", "x": 12, "y": 16 }
+        { "chance": 50, "item": "flags", "x": 12, "y": 16 }
       ],
       "sealed_item": {
         "~": { "item": { "item": "seed_weed" }, "furniture": "f_planter_harvest" },
