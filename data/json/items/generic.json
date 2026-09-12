@@ -3010,11 +3010,6 @@
         "description": "A big, body-sized pillow with a print of a masculine woman on the front and her scantily-clad version on the back.  It's captioned with 'TOMBOY SUPREMACY' on both sides."
       },
       {
-        "id": "bodypillow_femboy",
-        "name": { "str": "femboy body pillow" },
-        "description": "A big, body-sized pillow with a print of a feminine man on the front and his scantily-clad version on the back.  It's captioned with 'FEMBOY SUPREMACY' on both sides."
-      },
-      {
         "id": "bodypillow_tsundere",
         "name": { "str": "tsundere body pillow" },
         "description": "A big, body-sized pillow with a print of a pouting anime character on the front and their scantily-clad version on the back.  They don't actually like you or anything, they swear!"
