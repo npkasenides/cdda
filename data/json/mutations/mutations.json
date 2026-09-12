@@ -3257,7 +3257,7 @@
     "visibility": 3,
     "ugliness": 2,
     "description": "Your skin is light green and has a slightly woody quality to it.  This provides armor and helps you retain moisture, resulting in less thirst.  Greatly decreases wet penalties.",
-    "types": [ "SKIN" ],
+    "types": [ "SKIN", "skin_tone" ],
     "prereqs": [ "JAUNDICE" ],
     "leads_to": [ "BARK", "THORNS", "LEAVES" ],
     "category": [ "PLANT", "ELFA" ],
