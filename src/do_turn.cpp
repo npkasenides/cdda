@@ -1,9 +1,4 @@
 #include "do_turn.h"
-
-#if defined(EMSCRIPTEN)
-#include <emscripten.h>
-#endif
-
 #include "action.h"
 #include "avatar.h"
 #include "bionics.h"
@@ -715,12 +710,5 @@ bool do_turn()
     // Calculate bionic power balance
     u.power_balance = u.get_power_level() - u.power_prev_turn;
     u.power_prev_turn = u.get_power_level();
-
-#if defined(EMSCRIPTEN)
-    // This will cause a prompt to be shown if the window is closed, until the
-    // game is saved.
-    EM_ASM( window.game_unsaved = true; );
-#endif
-
     return false;
 }

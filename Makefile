@@ -22,8 +22,6 @@
 #   Run: make NATIVE=win32
 # OS X
 #   Run: make NATIVE=osx
-# Emscripten
-#   Run: make NATIVE=emscripten
 
 # Build types:
 # Debug (no optimizations)
@@ -115,10 +113,6 @@ WARNINGS = \
   -Wno-dangling-reference \
   -Wno-c++20-compat \
   -Wno-template-body
-ifeq ($(NATIVE), emscripten)
-  # The EM_ASM macro triggers this warning.
-  WARNINGS += -Wno-gnu-zero-variadic-macro-arguments
-endif
 PROFILE_FLAGS = -pg
 # Uncomment below to disable warnings
 #WARNINGS = -w
@@ -151,9 +145,6 @@ VERSION = 0.H
 
 TARGET_NAME = cataclysm
 TILES_TARGET_NAME = $(TARGET_NAME)-tiles
-ifeq ($(NATIVE), emscripten)
-  TILES_TARGET_NAME = $(TARGET_NAME)-tiles.js
-endif
 
 TARGET = $(BUILD_PREFIX)$(TARGET_NAME)
 TILESTARGET = $(BUILD_PREFIX)$(TILES_TARGET_NAME)
@@ -408,8 +399,6 @@ ifeq ($(RELEASE), 1)
     else
       OPTLEVEL = -O3
     endif
-  else ifeq ($(NATIVE), emscripten)
-    OPTLEVEL = -Os
   else
     # MXE ICE Workaround
     # known bad on 4.9.3 and 4.9.4, if it gets fixed this could include a version test too
@@ -471,9 +460,7 @@ else
     # way to turn off optimization (make NOOPT=1) entirely.
     OPTLEVEL = -O0
   else
-    ifeq ($(NATIVE),emscripten)
-      OPTLEVEL = -O3
-    else ifeq ($(shell $(CXX) -E -Og - < /dev/null > /dev/null 2>&1 && echo fog),fog)
+    ifeq ($(shell $(CXX) -E -Og - < /dev/null > /dev/null 2>&1 && echo fog),fog)
       OPTLEVEL = -Og
     else
       OPTLEVEL = -O0
@@ -637,47 +624,6 @@ ifeq ($(NATIVE), cygwin)
   TARGETSYSTEM=CYGWIN
 endif
 
-# Emscripten
-ifeq ($(NATIVE), emscripten)
-  CXX=emcc
-  LD=emcc
-
-  # Flags that are common across compile and link phases.
-  EMCC_COMMON_FLAGS = -sUSE_SDL=2 -sUSE_SDL_IMAGE=2 -sUSE_SDL_TTF=2 -sSDL2_IMAGE_FORMATS=['png'] -fexceptions
-
-  ifneq ($(RELEASE), 1)
-    EMCC_COMMON_FLAGS += -g
-  endif
-
-  CXXFLAGS += $(EMCC_COMMON_FLAGS)
-  LDFLAGS += $(EMCC_COMMON_FLAGS)
-
-  LDFLAGS += -sFORCE_FILESYSTEM
-  LDFLAGS += -sEXPORTED_RUNTIME_METHODS=['FS','stackTrace','jsStackTrace']
-  LDFLAGS += -sINITIAL_MEMORY=512MB
-  LDFLAGS += -sMAXIMUM_MEMORY=4GB
-  LDFLAGS += -sALLOW_MEMORY_GROWTH
-  LDFLAGS += -sSTACK_SIZE=262144
-  LDFLAGS += -sASYNCIFY
-  LDFLAGS += -sASYNCIFY_STACK_SIZE=16384
-  LDFLAGS += -sENVIRONMENT=web
-  LDFLAGS += -lidbfs.js
-  LDFLAGS += -lembind
-  LDFLAGS += -sWASM_BIGINT # Browser will require BigInt support.
-  LDFLAGS += -sMAX_WEBGL_VERSION=2
-
-  ifeq ($(RELEASE), 1)
-    # Release-mode Linker flags.
-    LDFLAGS += -Os
-    LDFLAGS += -sLZ4
-  else
-    # Debug mode linker flags.
-    LDFLAGS += -O1 # Emscripten link time is slow, so use low optimization level.
-    LDFLAGS += -sFS_DEBUG
-    LDFLAGS += -gseparate-dwarf
-  endif
-endif
-
 # MXE cross-compile to win32
 ifneq (,$(findstring mingw32,$(CROSS)))
   DEFINES += -DCROSS_LINUX
@@ -776,7 +722,7 @@ ifeq ($(TILES), 1)
         LDFLAGS += -lSDL2_mixer
       endif
     endif
-  else ifneq ($(NATIVE),emscripten)
+  else
     CXXFLAGS += $(shell $(PKG_CONFIG) --cflags sdl2 SDL2_image SDL2_ttf)
 
     ifeq ($(STATIC), 1)
@@ -1021,9 +967,7 @@ $(TARGET): $(OBJS)
 ifeq ($(RELEASE), 1)
   ifndef DEBUG_SYMBOLS
     ifneq ($(BACKTRACE),1)
-      ifneq ($(NATIVE), emscripten)
-	$(STRIP) $(TARGET)
-      endif
+      $(STRIP) $(TARGET)
     endif
   endif
 endif
