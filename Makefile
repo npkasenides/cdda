@@ -119,10 +119,10 @@ ifeq ($(NATIVE), emscripten)
   # The EM_ASM macro triggers this warning.
   WARNINGS += -Wno-gnu-zero-variadic-macro-arguments
 endif
+PROFILE_FLAGS = -pg
 # Uncomment below to disable warnings
 #WARNINGS = -w
 DEBUGSYMS = -g
-#PROFILE = -pg
 #OTHERS = -O3
 #DEFINES = -DNDEBUG
 
@@ -390,7 +390,9 @@ STRIP = $(CROSS)strip
 RC  = $(CROSS)windres
 AR  = $(CROSS)ar
 
-LDFLAGS += $(PROFILE)
+ifeq ($(PROFILE), 1)
+  LDFLAGS += $(PROFILE_FLAGS)
+endif
 
 ifneq ($(SANITIZE),)
   SANITIZE_FLAGS := -fsanitize=$(SANITIZE) -fno-sanitize-recover=all -fno-omit-frame-pointer
@@ -527,7 +529,10 @@ ifeq ($(PCH), 1)
 endif
 
 CPPFLAGS += -Isrc -isystem ${SRC_DIR}/third-party
-CXXFLAGS += $(WARNINGS) $(DEBUG) $(DEBUGSYMS) $(PROFILE) $(OTHERS)
+CXXFLAGS += $(WARNINGS) $(DEBUG) $(DEBUGSYMS) $(OTHERS)
+ifeq ($(PROFILE), 1)
+  CXXFLAGS += $(PROFILE_FLAGS)
+endif
 TOOL_CXXFLAGS = -DCATA_IN_TOOL
 
 BINDIST_EXTRAS += README.md data doc LICENSE.txt LICENSE-OFL-Terminus-Font.txt VERSION.txt $(JSON_FORMATTER_BIN)
