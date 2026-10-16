@@ -122,7 +122,7 @@ endif
 PROFILE_FLAGS = -pg
 # Uncomment below to disable warnings
 #WARNINGS = -w
-DEBUGSYMS = -g
+DEBUGSYMS = -ggdb
 #OTHERS = -O3
 #DEFINES = -DNDEBUG
 
@@ -455,13 +455,6 @@ ifeq ($(RELEASE), 1)
   # Strip symbols, generates smaller executable.
   OTHERS += $(RELEASE_FLAGS)
   DEBUG =
-  ifndef DEBUG_SYMBOLS
-    ifeq ($(BACKTRACE), 1)
-      DEBUGSYMS = -g1
-    else
-      DEBUGSYMS =
-    endif
-  endif
   DEFINES += -DRELEASE
   # Check for astyle or JSON regressions on release builds.
   ifeq ($(ASTYLE), 1)
